@@ -185,17 +185,25 @@ const TodoApp: React.FC = () => {
   };
 
 
-  const handleEditSave = () => {
-    if (actionsTodoId !== null && editValue.trim()) {
-      setTodos(
-        todos.map((t) =>
-          t.id === actionsTodoId ? { ...t, title: editValue } : t,
-        ),
-      );
-      setEditDialogOpen(false);
-    }
-    PatchTodos()
-  };
+ const handleEditSave = () => {
+  if (actionsTodoId !== null && editValue.trim()) {
+    const todo = todos.find((t) => t.id === actionsTodoId);
+
+    if (!todo) return;
+
+    setTodos(
+      todos.map((t) =>
+        t.id === actionsTodoId
+          ? { ...t, title: editValue, status: selectStatus }
+          : t
+      )
+    );
+
+    PatchTodos(actionsTodoId, editValue, selectStatus);
+  }
+
+  setEditDialogOpen(false);
+};
 
   // fetch all todos
   const FetchAllTodos = async () => {
